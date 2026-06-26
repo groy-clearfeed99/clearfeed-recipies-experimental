@@ -665,7 +665,7 @@ function formatMessages(messages) {
   }
 
   return messages.map(message => {
-    const responderTag = message.is_responder ? '[R] ' : '[NR]';
+    const responderTag = message.is_responder ? '[R] ' : '[NR] ';
     const author = message.author ? getUserName(message.author) : 'Unknown';
     const text = message.text || '';
     return `${responderTag}${author}: ${text}`;
