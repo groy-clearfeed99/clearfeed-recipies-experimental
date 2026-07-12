@@ -244,6 +244,7 @@ SUMMARY:
 
 - **Smart Lookup**: Works with customer names or channel IDs - if the Customer column is blank, the feature uses the Channel ID to find the customer
 - **Deduplication**: If a customer appears in multiple rows, the last value is used
+- **Conflict Detection**: Warns when the same customer has conflicting portal values in different rows (last occurrence wins)
 - **Case-Insensitive Matching**: Customer names are matched regardless of capitalization
 - **Smart State Checking**: Compares current portal state with desired state - only updates customers that need changes
 - **Mode Gating**: Only works in Customer-Centric mode (`IS_ON_CUSTOMER_INBOX_MODEL = true`)

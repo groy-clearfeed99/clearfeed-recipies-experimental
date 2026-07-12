@@ -1809,16 +1809,43 @@ function readPortalSheetData_() {
     // Skip rows missing Collection or Channel ID
     if (!collectionName || !channelId) continue;
 
-    // Check column 5 for "yes" or "no" values (case-insensitive)
-    const trimmedValue = String(enablePortalValue || '').trim().toLowerCase();
-    if (trimmedValue !== 'yes' && trimmedValue !== 'no') {
-      continue; // Skip rows that don't have "yes" or "no"
+    // Check column 5 for valid portal enable/disable values
+    // Supports: yes/no, true/false, boolean TRUE/FALSE (case-insensitive)
+    let enablePortal = null;
+    const rawValue = enablePortalValue;
+
+    if (rawValue === null || rawValue === undefined || rawValue === '') {
+      continue; // Skip empty values
+    }
+
+    // Handle string values
+    if (typeof rawValue === 'string') {
+      const trimmedValue = rawValue.trim().toLowerCase();
+      if (trimmedValue === 'yes' || trimmedValue === 'true') {
+        enablePortal = true;
+      } else if (trimmedValue === 'no' || trimmedValue === 'false') {
+        enablePortal = false;
+      } else {
+        continue; // Skip invalid string values
+      }
+    }
+    // Handle boolean values (from checkboxes)
+    else if (typeof rawValue === 'boolean') {
+      enablePortal = rawValue;
+    } else {
+      continue; // Skip unsupported types
+    }
+
+    // Normalize channel ID by stripping leading '#' if present
+    let normalizedChannelId = String(channelId).trim();
+    if (normalizedChannelId.startsWith('#')) {
+      normalizedChannelId = normalizedChannelId.substring(1);
     }
 
     portalData.push({
       customer_name: customerName ? String(customerName).trim() : '',
-      channel_id: String(channelId).trim(),
-      enable_portal: trimmedValue === 'yes'
+      channel_id: normalizedChannelId,
+      enable_portal: enablePortal
     });
   }
 
